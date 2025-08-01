@@ -2,8 +2,8 @@
 
 # CONFIG_FILE="dsh-config.json"
 API_URL="https://osh-preprod.oneapihub.com/api/v1/digital-content/documentation"
-API_KEY="${API_KEY}"
-LOGIN_URL="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='$API_KEY'"
+
+LOGIN_URL="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='${API_KEY}'"
 USERNAME="${USERNAME}"
 PASSWORD="${PASSWORD}"
 
