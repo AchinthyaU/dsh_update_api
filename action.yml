@@ -40,4 +40,4 @@ runs:
 
     - name: Run script with inputs and changed folders
       shell: bash
-      run: ${{ github.action_path }}/test.sh
+      run: ${{ github.action_path }}/test.sh $CHANGED_FOLDERS
