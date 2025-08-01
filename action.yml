@@ -40,5 +40,5 @@ runs:
 
     - name: Run script with inputs and changed folders
       shell: bash
-      run: |
-        ${{github.action_path}}/script.sh  $CHANGED_FOLDERS
+      run: ${{github.action_path}}/script.sh  $CHANGED_FOLDERS
+        
