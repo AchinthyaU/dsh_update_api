@@ -37,69 +37,68 @@ if [ "$TOKEN" == "null" ] || [ -z "$TOKEN" ]; then
   echo login_response : "$login_response" 
   echo "Failed to obtain Bearer token. Please check your credentials."
   exit 1
-else
- echo "ok"
-# fi
 
-# # Check jq is installed
-# if ! command -v jq &> /dev/null; then
-#   echo "jq is required but not installed. Please install jq."
-#   exit 1
-# fi
+fi
 
-# # Read all keys from config
+# Check jq is installed
+if ! command -v jq &> /dev/null; then
+  echo "jq is required but not installed. Please install jq."
+  exit 1
+fi
 
-# for key in "$@"; do
-#   dir="Api_Document/$key"
-#   zip_file="${key}.zip"
-#   api_json="$dir/api.json"
+# Read all keys from config
 
-#   if [ -d "$dir" ]; then
-#     echo "📦 Zipping $dir as $zip_file (excluding api.json)"
+for key in "$@"; do
+  dir="Api_Document/$key"
+  zip_file="${key}.zip"
+  api_json="$dir/api.json"
 
-#     (
-#       cd Api_Document || exit 1
-#       zip -r -q "../$zip_file" "$key" -x "$key/api.json"
-#     )
-#     # Extract values from JSON
+  if [ -d "$dir" ]; then
+    echo "📦 Zipping $dir as $zip_file (excluding api.json)"
+
+    (
+      cd Api_Document || exit 1
+      zip -r -q "../$zip_file" "$key" -x "$key/api.json"
+    )
+    # Extract values from JSON
   
-#   wrapperContentId=$(jq -r '.digitalContentId' "$api_json")
-#   versionedContentId=$(jq -r '.versionedContentId' "$api_json")
-#   digitalContentType=$(jq -r '.contentType' "$api_json")
-#     # Prepare requestModel JSON
-#     requestModel=$(printf '{"wrapperContentId":"%s","versionedContentId":"%s","digitalContentType":"%s"}' "$wrapperContentId" "$versionedContentId" "$digitalContentType")
-#     # uncomment for debugging
-#     # Print the curl command
-#     # echo "\nAbout to run the following curl command for $dir:"
-#     # echo "curl -s -o /dev/null -w '%{http_code}' '$API_URL' \\"
-#     # echo "  -H 'authorization: Bearer <token>' \\"
-#     # echo "  --form 'zipFile=@$zip_file;type=application/zip' \\"
-#     # echo "  --form 'requestModel=$requestModel'"
+  wrapperContentId=$(jq -r '.digitalContentId' "$api_json")
+  versionedContentId=$(jq -r '.versionedContentId' "$api_json")
+  digitalContentType=$(jq -r '.contentType' "$api_json")
+    # Prepare requestModel JSON
+    requestModel=$(printf '{"wrapperContentId":"%s","versionedContentId":"%s","digitalContentType":"%s"}' "$wrapperContentId" "$versionedContentId" "$digitalContentType")
+    # uncomment for debugging
+    # Print the curl command
+    # echo "\nAbout to run the following curl command for $dir:"
+    # echo "curl -s -o /dev/null -w '%{http_code}' '$API_URL' \\"
+    # echo "  -H 'authorization: Bearer <token>' \\"
+    # echo "  --form 'zipFile=@$zip_file;type=application/zip' \\"
+    # echo "  --form 'requestModel=$requestModel'"
     
-#     # Perform curl upload using --form
-#     response=$(curl -s "$API_URL" \
-#       -H "authorization: Bearer $TOKEN" \
-#       --form "zipFile=@$zip_file;type=application/zip" \
-#       --form "requestModel=$requestModel")    
-#     status_code=$(echo "$response" | jq -r '.status_code // empty')
-#     if [ -n "$status_code" ] && [ "$status_code" -gt 399 ]; then
-#       echo "Upload failed for $dir (status_code $status_code)"
-#     else
-#       echo "Upload succeeded for $dir"
-#     fi
-#     # uncomment for debugging
-#     # echo response : "$response"
-#     # read -p "Press Enter to continue"
-#     rm -f "$zip_file"
-#   else
-#     echo "Directory missing: $dir"
-#     missing_dirs+=("$dir")
-#   fi
-# done
+    # Perform curl upload using --form
+    response=$(curl -s "$API_URL" \
+      -H "authorization: Bearer $TOKEN" \
+      --form "zipFile=@$zip_file;type=application/zip" \
+      --form "requestModel=$requestModel")    
+    status_code=$(echo "$response" | jq -r '.status_code // empty')
+    if [ -n "$status_code" ] && [ "$status_code" -gt 399 ]; then
+      echo "Upload failed for $dir (status_code $status_code)"
+    else
+      echo "Upload succeeded for $dir"
+    fi
+    # uncomment for debugging
+    # echo response : "$response"
+    # read -p "Press Enter to continue"
+    rm -f "$zip_file"
+  else
+    echo "Directory missing: $dir"
+    missing_dirs+=("$dir")
+  fi
+done
 
-# if [ ${#missing_dirs[@]} -ne 0 ]; then
-#   echo "\nMissing directories:"
-#   for d in "${missing_dirs[@]}"; do
-#     echo "- $d"
-#   done
-# fi 
+if [ ${#missing_dirs[@]} -ne 0 ]; then
+  echo "\nMissing directories:"
+  for d in "${missing_dirs[@]}"; do
+    echo "- $d"
+  done
+fi 
