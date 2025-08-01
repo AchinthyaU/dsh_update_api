@@ -42,4 +42,3 @@ runs:
       shell: bash
       run: |
         ${{ github.action_path }}/script.sh  $CHANGED_FOLDERS
-      
