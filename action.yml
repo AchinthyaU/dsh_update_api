@@ -36,9 +36,9 @@ runs:
 
     - name: Make script executable
       shell: bash
-      run: chmod +x ${{github.action_path}}/script.sh
+      run: chmod +x ${{ github.action_path }}/script.sh
 
     - name: Run script with inputs and changed folders
       shell: bash
-      run: ${{github.action_path}}/script.sh  $CHANGED_FOLDERS
+      run: ${{ github.action_path }}/script.sh  $CHANGED_FOLDERS
         
