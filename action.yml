@@ -35,11 +35,11 @@ runs:
         echo "CHANGED_FOLDERS=$changed_arg" >> $GITHUB_ENV
 
     - name: Make script executable
-      shell:bash
-      run: chmod +x "${{ github.action_path }}/script.sh"
+      shell: bash
+      run: chmod +x ${{ github.action_path }}/script.sh
 
     - name: Run script with inputs and changed folders
       shell: bash
       run: |
-        "${{ github.action_path }}/script.sh" "$CHANGED_FOLDERS"
+        ${{ github.action_path }}/script.sh  $CHANGED_FOLDERS
       
