@@ -99,5 +99,4 @@ if [ ${#missing_dirs[@]} -ne 0 ]; then
   for d in "${missing_dirs[@]}"; do
     echo "- $d"
   done
-fi 
-
+fi
